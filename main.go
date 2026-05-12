@@ -28,16 +28,16 @@ func header() {
 
 	// Header dengan dekorasi
 	fmt.Printf("%s", green)
-	fmt.Printf("╔════════════════════════════════════════════════════════════════════════════════╗")
-	fmt.Printf("║                                                                                ║")
-	fmt.Printf("║          ✦ ★ ✦ ★ ✦  🏥 SehatinPC 🏥  ✦ ★ ✦ ★ ✦                            ║")
-	fmt.Printf("║                                                                                ║")
-	fmt.Printf"║%s%s%s%-79s%s║\n", lightGreen, bold, "  Go Healthier, Go Faster", reset, green)
-	fmt.Printf("║                                                                                ║")
-	fmt.Printf("╠════════════════════════════════════════════════════════════════════════════════╣")
-	fmt.Printf("║  ⚕️  Aplikasi Kesehatan Komputer Anda  ⚕️                                      ║")
-	fmt.Printf("║  🔧 Maintenance • 💻 Optimization • 🛡️  Security                              ║")
-	fmt.Printf("╚═════
+	fmt.Println("╔════════════════════════════════════════════════════════════════════════════════╗")
+	fmt.Println("║                                                                                ║")
+	fmt.Println("║          ✦ ★ ✦ ★ ✦  🏥 SehatinPC 🏥  ✦ ★ ✦ ★ ✦                            ║")
+	fmt.Println("║                                                                                ║")
+	fmt.Printf("║%s%s%s%-79s%s║\n", lightGreen, bold, "  Go Healthier, Go Faster", reset, green)
+	fmt.Println("║                                                                                ║")
+	fmt.Println("╠════════════════════════════════════════════════════════════════════════════════╣")
+	fmt.Println("║  ⚕️  Aplikasi Kesehatan Komputer Anda  ⚕️                                      ║")
+	fmt.Println("║  🔧 Maintenance • 💻 Optimization • 🛡️  Security                              ║")
+	fmt.Println("╚════════════════════════════════════════════════════════════════════════════════╝")
 	fmt.Printf("%s", reset)
 	fmt.Println()
 }
