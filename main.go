@@ -72,8 +72,6 @@ func menu(selectOption *int, cnt *int) {
 
 // Fungsi showTable untuk menampilkan data komponen dalam bentuk tabel
 func showTable(data *arrKomponen, nData int) {
-	cls()
-	header()
 	fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
 	fmt.Println("─────┼──────────────────────┼─────────────────┼─────────────────┼─────────────────────┼───────────────┼──────────────")
 	for i := 0; i < nData; i++ {
@@ -84,30 +82,94 @@ func showTable(data *arrKomponen, nData int) {
 // Fungsi createComponent untuk menambah data komponen
 func createComponent(data *arrKomponen, nData *int) {
 	cls()
-	fmt.Println("Fitur add Belum tersedia.")
+	var newKomponen komponen
+	fmt.Printf("Masukkan nama komponen: ")
+	fmt.Scan(&newKomponen.nama)
+	fmt.Printf("Masukkan jenis komponen: ")
+	fmt.Scan(&newKomponen.jenis)
+	fmt.Printf("Masukkan nomor seri: ")
+	fmt.Scan(&newKomponen.nomorSeri)
+	fmt.Printf("Masukkan suhu sensor: ")
+	fmt.Scan(&newKomponen.suhuSensor)
+	fmt.Printf("Masukkan beban kerja: ")
+	fmt.Scan(&newKomponen.bebanKerja)
+	fmt.Printf("Masukkan status: ")
+	fmt.Scan(&newKomponen.status)
+	data[*nData] = newKomponen
+	(*nData)++
 }
 
 // Fungsi updateComponent untuk mengubah data komponen
 func updateComponent(data *arrKomponen, nData *int) {
 	cls()
-	fmt.Println("Fitur update Belum tersedia.")
+	var updateOption, selectOption int
+	showTable(data, *nData)
+	fmt.Printf("Masukkan nomor komponen yang ingin diupdate (1-%d): ", *nData)
+	fmt.Scan(&updateOption)
+	if updateOption >= 1 && updateOption <= *nData {
+		fmt.Printf("Pilih atribut yang ingin diupdate:\n")
+		fmt.Printf("[1] Nama Komponen\n")
+		fmt.Printf("[2] Jenis Komponen\n")
+		fmt.Printf("[3] Nomor Seri\n")
+		fmt.Printf("[4] Suhu Sensor (°C)\n")
+		fmt.Printf("[5] Beban Kerja (%%)\n")
+		fmt.Printf("[6] Status\n")
+		fmt.Printf("Masukkan pilihan atribut (1-6): ")
+		fmt.Scan(&selectOption)
+		switch selectOption {
+		case 1:
+			fmt.Printf("Masukkan nama komponen baru: ")
+			fmt.Scan(&data[updateOption-1].nama)
+		case 2:
+			fmt.Printf("Masukkan jenis komponen baru: ")
+			fmt.Scan(&data[updateOption-1].jenis)
+		case 3:
+			fmt.Printf("Masukkan nomor seri baru: ")
+			fmt.Scan(&data[updateOption-1].nomorSeri)
+		case 4:
+			fmt.Printf("Masukkan suhu sensor baru: ")
+			fmt.Scan(&data[updateOption-1].suhuSensor)
+		case 5:
+			fmt.Printf("Masukkan beban kerja baru: ")
+			fmt.Scan(&data[updateOption-1].bebanKerja)
+		case 6:
+			fmt.Printf("Masukkan status baru: ")
+			fmt.Scan(&data[updateOption-1].status)
+		default:
+			fmt.Println("Pilihan tidak valid.")
+		}
+	} else {
+		fmt.Println("Nomor komponen tidak valid.")
+	}
 }
 
 // Fungsi deleteComponent untuk menghapus data komponen
 func deleteComponent(data *arrKomponen, nData *int) {
 	cls()
-	fmt.Println("Fitur delete Belum tersedia.")
+	var deleteOption, i int
+	showTable(data, *nData)
+	fmt.Printf("Masukkan nomor komponen yang ingin dihapus (1-%d): ", *nData)
+	fmt.Scan(&deleteOption)
+	if deleteOption >= 1 && deleteOption <= *nData {
+		for i = deleteOption - 1; i < *nData-1; i++ {
+			data[i] = data[i+1]
+		}
+		*nData--
+		fmt.Println("Komponen berhasil dihapus.")
+	} else {
+		fmt.Println("Nomor komponen tidak valid.")
+	}
 }
 
 // Fungsi manageHome untuk menampilkan menu manajemen komponen
-func manageHome(data *arrKomponen, selectOption *int, cnt *int) {
+func manageHome(data *arrKomponen, selectOption *int, cnt *int, nData int) {
 	cls()
 	header()
+	showTable(data, nData)
 	fmt.Printf("%-10s[1] ➤ Add Component\n", "")
-	fmt.Printf("%-10s[2] ➤ View Component\n", "")
-	fmt.Printf("%-10s[3] ➤ Update Component\n", "")
-	fmt.Printf("%-10s[4] ➤ Delete Component\n", "")
-	fmt.Printf("%-10s[5] ↩️ Back to Main Menu\n", "")
+	fmt.Printf("%-10s[2] ➤ Update Component\n", "")
+	fmt.Printf("%-10s[3] ➤ Delete Component\n", "")
+	fmt.Printf("%-10s[4] ↩️ Back to Main Menu\n", "")
 	fmt.Println()
 	fmt.Printf("%-10s╰┈➤ ", "")
 	fmt.Scan(selectOption)
@@ -126,8 +188,8 @@ func main() {
 		menu(&selectOption, &cnt)
 		if selectOption == 1 {
 			cnt = 0
-			for selectOption != 5 {
-				manageHome(&data, &selectOption, &cnt)
+			for selectOption != 4 {
+				manageHome(&data, &selectOption, &cnt, nData)
 				if nData > 0 {
 					switch selectOption {
 					case 1:
@@ -136,16 +198,11 @@ func main() {
 						fmt.Scanln()
 						fmt.Scanln()
 					case 2:
-						showTable(&data, nData)
-						fmt.Println("\nTekan Enter untuk kembali ke menu manajemen komponen...")
-						fmt.Scanln()
-						fmt.Scanln()
-					case 3:
 						updateComponent(&data, &nData)
 						fmt.Println("\nTekan Enter untuk kembali ke menu manajemen komponen...")
 						fmt.Scanln()
 						fmt.Scanln()
-					case 4:
+					case 3:
 						deleteComponent(&data, &nData)
 						fmt.Println("\nTekan Enter untuk kembali ke menu manajemen komponen...")
 						fmt.Scanln()
