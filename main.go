@@ -161,6 +161,150 @@ func deleteComponent(data *arrKomponen, nData *int) {
 	}
 }
 
+//Fungsi search untuk mencari data komponen
+func searchComponent(data *arrKomponen, nData int) {
+	cls()
+	var i int
+	var searchQuery string
+	fmt.Print("Masukkan nama komponen yang ingin dicari: ")
+	fmt.Scan(&searchQuery)
+	fmt.Println()
+	fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
+	fmt.Println("─────┼──────────────────────┼─────────────────┼─────────────────┼─────────────────────┼───────────────┼──────────────")
+	for i = 0; i < nData; i++ {
+		if data[i].nama == searchQuery {
+			fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-15.2f│ %-10.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
+		}
+	}
+}
+
+func sortComponent(data *arrKomponen, nData int) {
+	cls()
+	var sortOption, i, j, ascORdesc int
+	fmt.Println("Pilih atribut untuk mengurutkan komponen:")
+	fmt.Printf("[1] Nama Komponen\n")
+	fmt.Printf("[2] Jenis Komponen\n")
+	fmt.Printf("[3] Nomor Seri\n")
+	fmt.Printf("[4] Suhu Sensor (°C)\n")
+	fmt.Printf("[5] Beban Kerja (%%)\n")
+	fmt.Printf("[6] Status\n")
+	fmt.Print("Masukkan pilihan atribut (1-6): ")
+	fmt.Scan(&sortOption)
+	fmt.Print("Masukkan pilihan urutan (1-Ascending, 2-Descending): ")
+	fmt.Scan(&ascORdesc)
+
+	switch sortOption {
+	case 1:
+		if ascORdesc == 1 {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].nama > data[j+1].nama {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		} else {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].nama < data[j+1].nama {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		}
+	case 2:
+		if ascORdesc == 1 {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].jenis > data[j+1].jenis {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		} else {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].jenis < data[j+1].jenis {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		}
+	case 3:
+		if ascORdesc == 1 {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].nomorSeri > data[j+1].nomorSeri {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		} else {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].nomorSeri < data[j+1].nomorSeri {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		}
+	case 4:
+		if ascORdesc == 1 {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].suhuSensor > data[j+1].suhuSensor {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		} else {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].suhuSensor < data[j+1].suhuSensor {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		}
+	case 5:
+		if ascORdesc == 1 {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].bebanKerja > data[j+1].bebanKerja {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		} else {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].bebanKerja < data[j+1].bebanKerja {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		}
+	case 6:
+		if ascORdesc == 1 {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].status > data[j+1].status {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		} else {
+			for i = 0; i < nData-1; i++ {
+				for j = 0; j < nData-i-1; j++ {
+					if data[j].status < data[j+1].status {
+						data[j], data[j+1] = data[j+1], data[j]
+					}
+				}
+			}
+		}
+	}
+}
+
 // Fungsi manageHome untuk menampilkan menu manajemen komponen
 func manageHome(data *arrKomponen, selectOption *int, cnt *int, nData int) {
 	cls()
@@ -169,7 +313,9 @@ func manageHome(data *arrKomponen, selectOption *int, cnt *int, nData int) {
 	fmt.Printf("%-10s[1] ➤ Add Component\n", "")
 	fmt.Printf("%-10s[2] ➤ Update Component\n", "")
 	fmt.Printf("%-10s[3] ➤ Delete Component\n", "")
-	fmt.Printf("%-10s[4] ↩️ Back to Main Menu\n", "")
+	fmt.Printf("%-10s[4] ➤ Search Component\n", "")
+	fmt.Printf("%-10s[5] ➤ Sort Component\n", "")
+	fmt.Printf("%-10s[6] ↩️ Back to Main Menu\n", "")
 	fmt.Println()
 	fmt.Printf("%-10s╰┈➤ ", "")
 	fmt.Scan(selectOption)
@@ -188,7 +334,7 @@ func main() {
 		menu(&selectOption, &cnt)
 		if selectOption == 1 {
 			cnt = 0
-			for selectOption != 4 {
+			for selectOption != 6 {
 				manageHome(&data, &selectOption, &cnt, nData)
 				if nData > 0 {
 					switch selectOption {
@@ -204,6 +350,16 @@ func main() {
 						fmt.Scanln()
 					case 3:
 						deleteComponent(&data, &nData)
+						fmt.Println("\nTekan Enter untuk kembali ke menu manajemen komponen...")
+						fmt.Scanln()
+						fmt.Scanln()
+					case 4:
+						searchComponent(&data, nData)
+						fmt.Println("\nTekan Enter untuk kembali ke menu manajemen komponen...")
+						fmt.Scanln()
+						fmt.Scanln()
+					case 5:
+						sortComponent(&data, nData)
 						fmt.Println("\nTekan Enter untuk kembali ke menu manajemen komponen...")
 						fmt.Scanln()
 						fmt.Scanln()
