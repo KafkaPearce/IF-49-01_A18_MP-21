@@ -63,7 +63,7 @@ func menu(selectOption *int, cnt *int) {
 		fmt.Println()
 	}
 	fmt.Printf("%-10s[1] 🔧 Manage Component\n", "")
-	fmt.Printf("%-10s[2] ↩️ Exit app\n", "")
+	fmt.Printf("%-10s[2] ↩️  Exit app\n", "")
 	fmt.Println()
 	fmt.Printf("%-10s╰┈➤ ", "")
 	fmt.Scan(selectOption)
@@ -73,9 +73,9 @@ func menu(selectOption *int, cnt *int) {
 // Fungsi showTable untuk menampilkan data komponen dalam bentuk tabel
 func showTable(data *arrKomponen, nData int) {
 	fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
-	fmt.Println("─────┼──────────────────────┼─────────────────┼─────────────────┼─────────────────────┼───────────────┼──────────────")
+	fmt.Println("─────┼─────────────────────┼────────────────┼────────────────┼─────────────────┼────────────────┼──────────────")
 	for i := 0; i < nData; i++ {
-		fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-15.2f│ %-10.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
+		fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-16.2f│ %-15.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
 	}
 }
 
@@ -83,17 +83,17 @@ func showTable(data *arrKomponen, nData int) {
 func createComponent(data *arrKomponen, nData *int) {
 	cls()
 	var newKomponen komponen
-	fmt.Printf("Masukkan nama komponen: ")
+	fmt.Print("Masukkan nama komponen: ")
 	fmt.Scan(&newKomponen.nama)
-	fmt.Printf("Masukkan jenis komponen: ")
+	fmt.Print("Masukkan jenis komponen: ")
 	fmt.Scan(&newKomponen.jenis)
-	fmt.Printf("Masukkan nomor seri: ")
+	fmt.Print("Masukkan nomor seri: ")
 	fmt.Scan(&newKomponen.nomorSeri)
-	fmt.Printf("Masukkan suhu sensor: ")
+	fmt.Print("Masukkan suhu sensor: ")
 	fmt.Scan(&newKomponen.suhuSensor)
-	fmt.Printf("Masukkan beban kerja: ")
+	fmt.Print("Masukkan beban kerja: ")
 	fmt.Scan(&newKomponen.bebanKerja)
-	fmt.Printf("Masukkan status: ")
+	fmt.Print("Masukkan status: ")
 	fmt.Scan(&newKomponen.status)
 	data[*nData] = newKomponen
 	(*nData)++
@@ -170,10 +170,10 @@ func searchComponent(data *arrKomponen, nData int) {
 	fmt.Scan(&searchQuery)
 	fmt.Println()
 	fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
-	fmt.Println("─────┼──────────────────────┼─────────────────┼─────────────────┼─────────────────────┼───────────────┼──────────────")
+	fmt.Println("─────┼─────────────────────┼────────────────┼────────────────┼─────────────────┼────────────────┼──────────────")
 	for i = 0; i < nData; i++ {
 		if data[i].nama == searchQuery {
-			fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-15.2f│ %-10.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
+			fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-16.2f│ %-15.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
 		}
 	}
 }
@@ -181,6 +181,7 @@ func searchComponent(data *arrKomponen, nData int) {
 func sortComponent(data *arrKomponen, nData int) {
 	cls()
 	var sortOption, i, j, ascORdesc int
+	var temp komponen
 	fmt.Println("Pilih atribut untuk mengurutkan komponen:")
 	fmt.Printf("[1] Nama Komponen\n")
 	fmt.Printf("[2] Jenis Komponen\n")
@@ -190,118 +191,174 @@ func sortComponent(data *arrKomponen, nData int) {
 	fmt.Printf("[6] Status\n")
 	fmt.Print("Masukkan pilihan atribut (1-6): ")
 	fmt.Scan(&sortOption)
-	fmt.Print("Masukkan pilihan urutan (1-Ascending, 2-Descending): ")
-	fmt.Scan(&ascORdesc)
 
-	switch sortOption {
-	case 1:
-		if ascORdesc == 1 {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].nama > data[j+1].nama {
-						data[j], data[j+1] = data[j+1], data[j]
+	if sortOption >= 1 && sortOption <= 6 {
+		fmt.Print("Masukkan pilihan urutan (1-Ascending, 2-Descending): ")
+		fmt.Scan(&ascORdesc)
+		if ascORdesc == 1 || ascORdesc == 2 {
+			switch sortOption {
+			case 1:
+				if ascORdesc == 1 {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.nama < data[j-1].nama {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				} else {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.nama > data[j-1].nama {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				}
+			case 2:
+				if ascORdesc == 1 {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.jenis < data[j-1].jenis {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				} else {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.jenis > data[j-1].jenis {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				}
+			case 3:
+				if ascORdesc == 1 {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.nomorSeri < data[j-1].nomorSeri {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				} else {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.nomorSeri > data[j-1].nomorSeri {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				}
+			case 4:
+				if ascORdesc == 1 {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.suhuSensor < data[j-1].suhuSensor {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				} else {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.suhuSensor > data[j-1].suhuSensor {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				}
+			case 5:
+				if ascORdesc == 1 {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.bebanKerja < data[j-1].bebanKerja {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				} else {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.bebanKerja > data[j-1].bebanKerja {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				}
+			case 6:
+				if ascORdesc == 1 {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.status < data[j-1].status {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
+					}
+				} else {
+					i = 1
+					for i <= nData-1 {
+						j = i
+						temp = data[j]
+						for j > 0 && temp.status > data[j-1].status {
+							data[j] = data[j-1]
+							j = j - 1
+						}
+						data[j] = temp
+						i = i + 1
 					}
 				}
 			}
 		} else {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].nama < data[j+1].nama {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
+			fmt.Println("Pilihan tidak valid.")
 		}
-	case 2:
-		if ascORdesc == 1 {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].jenis > data[j+1].jenis {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
-		} else {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].jenis < data[j+1].jenis {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
-		}
-	case 3:
-		if ascORdesc == 1 {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].nomorSeri > data[j+1].nomorSeri {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
-		} else {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].nomorSeri < data[j+1].nomorSeri {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
-		}
-	case 4:
-		if ascORdesc == 1 {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].suhuSensor > data[j+1].suhuSensor {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
-		} else {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].suhuSensor < data[j+1].suhuSensor {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
-		}
-	case 5:
-		if ascORdesc == 1 {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].bebanKerja > data[j+1].bebanKerja {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
-		} else {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].bebanKerja < data[j+1].bebanKerja {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
-		}
-	case 6:
-		if ascORdesc == 1 {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].status > data[j+1].status {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
-		} else {
-			for i = 0; i < nData-1; i++ {
-				for j = 0; j < nData-i-1; j++ {
-					if data[j].status < data[j+1].status {
-						data[j], data[j+1] = data[j+1], data[j]
-					}
-				}
-			}
-		}
+	} else {
+		fmt.Println("Pilihan tidak valid.")
 	}
 }
 
@@ -336,7 +393,7 @@ func main() {
 			cnt = 0
 			for selectOption != 6 {
 				manageHome(&data, &selectOption, &cnt, nData)
-				if nData > 0 {
+				if cnt > 0 {
 					switch selectOption {
 					case 1:
 						createComponent(&data, &nData)
