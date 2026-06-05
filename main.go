@@ -52,23 +52,6 @@ func header() {
 	fmt.Println()
 }
 
-// Fungsi menu
-func menu(selectOption *int, cnt *int) {
-	cls()
-	header()
-	if (*selectOption < 1 || *cnt > 2) && *cnt != 0 {
-		fmt.Println("Pilihan tidak valid. Silakan pilih menu yang sesuai.")
-	} else {
-		fmt.Println()
-	}
-	fmt.Printf("%-10s[1] 🔧 Manage Component\n", "")
-	fmt.Printf("%-10s[2] ↩️  Exit app\n", "")
-	fmt.Println()
-	fmt.Printf("%-10s╰┈➤ ", "")
-	fmt.Scan(selectOption)
-	*cnt++
-}
-
 // showTable untuk menampilkan data komponen dalam bentuk tabel
 func showTable(data *arrKomponen, nData int) {
 	fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
@@ -83,7 +66,7 @@ func statKom(data *arrKomponen, nData int) {
 	var i, totalWarning int
 	var totalSuhu float64
 	for i = 0; i < nData; i++ {
-		if data[i].status == "Warning" {
+		if data[i].status != "Normal" {
 			totalWarning++
 		}
 		totalSuhu += data[i].suhuSensor
@@ -91,6 +74,18 @@ func statKom(data *arrKomponen, nData int) {
 	fmt.Println("Status: ")
 	fmt.Printf("Jumlah Komponen yang bersmasalah: %d\n", totalWarning)
 	fmt.Printf("Rata-rata suhu Komponen keseluruhan: %.2f\n", totalSuhu/float64(nData))
+}
+
+func healthStatus(data *arrKomponen, index int) {
+	if data[index].suhuSensor > 80.0 && data[index].bebanKerja > 90.0 {
+		data[index].status = "Critical"
+	} else if data[index].suhuSensor > 80.0 {
+		data[index].status = "Overheat"
+	} else if data[index].bebanKerja > 90.0 {
+		data[index].status = "Lag"
+	} else {
+		data[index].status = "Normal"
+	}
 }
 
 // createComponent untuk menambah data komponen
@@ -103,16 +98,12 @@ func createComponent(data *arrKomponen, nData *int) {
 	fmt.Scan(&newKomponen.jenis)
 	fmt.Print("Masukkan nomor seri: ")
 	fmt.Scan(&newKomponen.nomorSeri)
-	fmt.Print("Masukkan suhu sensor: ")
+	fmt.Print("Masukkan suhu sensor (°C): ")
 	fmt.Scan(&newKomponen.suhuSensor)
-	fmt.Print("Masukkan beban kerja: ")
+	fmt.Print("Masukkan beban kerja (%): ")
 	fmt.Scan(&newKomponen.bebanKerja)
-	if newKomponen.suhuSensor > 80.0 || newKomponen.bebanKerja > 90.0 {
-		newKomponen.status = "Warning"
-	} else {
-		newKomponen.status = "Normal"
-	}
 	data[*nData] = newKomponen
+	healthStatus(data, *nData)
 	(*nData)++
 }
 
@@ -145,18 +136,18 @@ func updateComponent(data *arrKomponen, nData *int) {
 		case 4:
 			fmt.Printf("Masukkan suhu sensor baru: ")
 			fmt.Scan(&data[updateOption-1].suhuSensor)
+			healthStatus(data, updateOption-1)
 		case 5:
 			fmt.Printf("Masukkan beban kerja baru: ")
 			fmt.Scan(&data[updateOption-1].bebanKerja)
+			healthStatus(data, updateOption-1)
 		default:
 			fmt.Println("Pilihan tidak valid.")
 		}
 	} else {
 		fmt.Println("Nomor komponen tidak valid.")
 	}
-	if data[updateOption-1].suhuSensor > 85.00 || data[updateOption-1].bebanKerja > 90.00 {
-		data[updateOption-1].status = "Warning"
-	}
+
 }
 
 // deleteComponent untuk menghapus data komponen
@@ -209,6 +200,7 @@ func searchComponent(data *arrKomponen, nData int) {
 				fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-16.2f│ %-15.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
 			}
 		}
+
 	} else {
 		fmt.Printf("Input tidak valid!\n")
 		fmt.Scanln()
@@ -246,7 +238,7 @@ func sortComponent(data *arrKomponen, nData int) {
 						i = i + 1
 					}
 				} else {
-					 for i = 0; i < nData-1; i++ {
+					for i = 0; i < nData-1; i++ {
 						pass = i
 						for j = i + 1; j < nData; j++ {
 							if data[j].nomorSeri > data[pass].nomorSeri {
@@ -272,7 +264,7 @@ func sortComponent(data *arrKomponen, nData int) {
 						i = i + 1
 					}
 				} else {
-					 for i = 0; i < nData-1; i++ {
+					for i = 0; i < nData-1; i++ {
 						pass = i
 						for j = i + 1; j < nData; j++ {
 							if data[j].suhuSensor > data[pass].suhuSensor {
@@ -298,7 +290,7 @@ func sortComponent(data *arrKomponen, nData int) {
 						i = i + 1
 					}
 				} else {
-					 for i = 0; i < nData-1; i++ {
+					for i = 0; i < nData-1; i++ {
 						pass = i
 						for j = i + 1; j < nData; j++ {
 							if data[j].bebanKerja > data[pass].bebanKerja {
@@ -330,7 +322,24 @@ func manageHome(data *arrKomponen, selectOption *int, cnt *int, nData int) {
 	fmt.Printf("%-10s[3] ➤ Delete Component\n", "")
 	fmt.Printf("%-10s[4] ➤ Search Component\n", "")
 	fmt.Printf("%-10s[5] ➤ Sort Component\n", "")
-	fmt.Printf("%-10s[6] ↩️ Back to Main Menu\n", "")
+	fmt.Printf("%-10s[0] ↩️ Back to Main Menu\n", "")
+	fmt.Println()
+	fmt.Printf("%-10s╰┈➤ ", "")
+	fmt.Scan(selectOption)
+	*cnt++
+}
+
+// Fungsi menu
+func menu(selectOption *int, cnt *int) {
+	cls()
+	header()
+	if (*selectOption < 1 || *cnt > 2) && *cnt != 0 {
+		fmt.Println("Pilihan tidak valid. Silakan pilih menu yang sesuai.")
+	} else {
+		fmt.Println()
+	}
+	fmt.Printf("%-10s[1] 🔧 Manage Component\n", "")
+	fmt.Printf("%-10s[2] ↩️  Exit app\n", "")
 	fmt.Println()
 	fmt.Printf("%-10s╰┈➤ ", "")
 	fmt.Scan(selectOption)
@@ -349,7 +358,7 @@ func main() {
 		menu(&selectOption, &cnt)
 		if selectOption == 1 {
 			cnt = 0
-			for selectOption != 6 {
+			for selectOption != 0 {
 				manageHome(&data, &selectOption, &cnt, nData)
 				if cnt > 0 {
 					switch selectOption {
