@@ -19,6 +19,9 @@ type komponen struct {
 type arrKomponen [nmax]komponen
 
 func cls() {
+	// I.S -
+	// F.S membersihkan layar terminal
+
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
 		cmd = exec.Command("cmd", "/c", "cls")
@@ -31,13 +34,15 @@ func cls() {
 
 // header untuk menampilkan header pada aplikasi
 func header() {
+	// I.S 
+	// F.S menampilkan header dengan dekorasi
+
 	var green, lightGreen, reset, bold string
 	green = "\033[92m"
 	lightGreen = "\033[32m"
 	reset = "\033[0m"
 	bold = "\033[1m"
 
-	// Header dengan dekorasi
 	fmt.Printf("%s", green)
 	fmt.Println("╔════════════════════════════════════════════════════════════════════════════════╗")
 	fmt.Println("║                                                                                ║")
@@ -54,6 +59,9 @@ func header() {
 
 // showTable untuk menampilkan data komponen dalam bentuk tabel
 func showTable(data *arrKomponen, nData int) {
+	// I.S data komponen terdefinisi, nData menyatakan jumlah data komponen yang ada
+	// F.S menampilkan data komponen dalam bentuk tabel
+
 	var i int
 	fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
 	fmt.Println("─────┼─────────────────────┼────────────────┼────────────────┼─────────────────┼────────────────┼──────────────")
@@ -64,6 +72,9 @@ func showTable(data *arrKomponen, nData int) {
 
 // statistik komponen
 func statKom(data *arrKomponen, nData int) {
+	// I.S data komponen terdefinisi, nData menyatakan jumlah data komponen yang ada
+	// F.S menampilkan jumlah komponen yang bermasalah dan rata-rata suhu sensor keseluruhan
+
 	var i, totalWarning int
 	var totalSuhu float64
 	for i = 0; i < nData; i++ {
@@ -78,6 +89,9 @@ func statKom(data *arrKomponen, nData int) {
 }
 
 func healthStatus(data *arrKomponen, index int) {
+	// I.S data komponen pada index tertentu terdefinisi
+	// F.S status kesehatan komponen pada index tertentu diupdate berdasarkan suhu sensor dan beban kerja
+
 	if data[index].suhuSensor > 80.0 && data[index].bebanKerja > 90.0 {
 		data[index].status = "Critical"
 	} else if data[index].suhuSensor > 80.0 {
@@ -91,6 +105,9 @@ func healthStatus(data *arrKomponen, index int) {
 
 // createComponent untuk menambah data komponen
 func createComponent(data *arrKomponen, nData *int) {
+	// I.S data komponen terdefinisi, nData menyatakan jumlah data komponen yang ada
+	// F.S data komponen baru ditambahkan pada index nData dan nData bertambah 1
+
 	cls()
 	var newKomponen komponen
 	fmt.Print("Masukkan nama komponen: ")
@@ -110,6 +127,9 @@ func createComponent(data *arrKomponen, nData *int) {
 
 // updateComponent untuk mengubah data komponen
 func updateComponent(data *arrKomponen, nData *int) {
+	// I.S data komponen terdefinisi, nData menyatakan jumlah data komponen yang ada
+	// F.S data komponen pada index tertentu diubah sesuai dengan input pengguna
+
 	cls()
 	var updateOption, selectOption int
 	showTable(data, *nData)
@@ -153,6 +173,9 @@ func updateComponent(data *arrKomponen, nData *int) {
 
 // deleteComponent untuk menghapus data komponen
 func deleteComponent(data *arrKomponen, nData *int) {
+	// I.S data komponen terdefinisi, nData menyatakan jumlah data komponen yang ada
+	// F.S data komponen pada index tertentu dihapus dan nData berkurang 1
+
 	cls()
 	var deleteOption, i int
 	showTable(data, *nData)
@@ -171,6 +194,9 @@ func deleteComponent(data *arrKomponen, nData *int) {
 
 // search untuk mencari data komponen
 func searchComponent(data *arrKomponen, nData int) {
+	// I.S data komponen terdefinisi, nData menyatakan jumlah data komponen yang ada
+	// F.S data komponen yang sesuai dengan kriteria pencarian ditampilkan dalam bentuk tabel
+
 	cls()
 	var searchOption, i, j, left, right, mid, batasKiri, batasKanan int
 	var searchQuery string
@@ -264,6 +290,9 @@ func searchComponent(data *arrKomponen, nData int) {
 }
 
 func sortComponent(data *arrKomponen, nData int) {
+	// I.S data komponen terdefinisi, nData menyatakan jumlah data komponen yang ada
+	// F.S data komponen diurutkan berdasarkan atribut yang dipilih oleh pengguna dalam urutan ascending atau descending
+
 	cls()
 	var sortOption, i, j, ascORdesc, pass int
 	var temp komponen
@@ -369,6 +398,9 @@ func sortComponent(data *arrKomponen, nData int) {
 
 // manageHome untuk menampilkan menu manajemen komponen
 func manageHome(data *arrKomponen, selectOption *int, cnt *int, nData int) {
+	// I.S data komponen terdefinisi, nData menyatakan jumlah data komponen yang ada, selectOption menyatakan pilihan menu manajemen komponen, cnt menyatakan jumlah interaksi pengguna dengan menu manajemen komponen
+	// F.S menampilkan menu manajemen komponen dan meminta input pengguna
+
 	cls()
 	header()
 	showTable(data, nData)
@@ -387,6 +419,8 @@ func manageHome(data *arrKomponen, selectOption *int, cnt *int, nData int) {
 
 // Fungsi menu
 func menu(selectOption *int, cnt *int) {
+	// I.S selectOption menyatakan pilihan menu utama, cnt menyatakan jumlah interaksi pengguna dengan menu utama
+	// F.S menampilkan menu utama dan meminta input pengguna
 	cls()
 	header()
 	if (*selectOption < 1 || *cnt > 2) && *cnt != 0 {
