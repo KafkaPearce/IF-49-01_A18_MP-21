@@ -54,9 +54,10 @@ func header() {
 
 // showTable untuk menampilkan data komponen dalam bentuk tabel
 func showTable(data *arrKomponen, nData int) {
+	var i int
 	fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
 	fmt.Println("─────┼─────────────────────┼────────────────┼────────────────┼─────────────────┼────────────────┼──────────────")
-	for i := 0; i < nData; i++ {
+	for i = 0; i < nData; i++ {
 		fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-16.2f│ %-15.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
 	}
 }
@@ -171,39 +172,94 @@ func deleteComponent(data *arrKomponen, nData *int) {
 // search untuk mencari data komponen
 func searchComponent(data *arrKomponen, nData int) {
 	cls()
-	var i, searchOption int
+	var searchOption, i, j, left, right, mid, batasKiri, batasKanan int
 	var searchQuery string
+	var found bool
+	var tempData arrKomponen
+	var tempSort komponen
 
 	fmt.Printf("Opsi Pencarian:\n")
 	fmt.Printf("[1] Nama\n")
 	fmt.Printf("[2] Status\n")
 	fmt.Printf("Pilih Berdasarkan apa: ")
 	fmt.Scan(&searchOption)
+
 	if searchOption == 1 {
 		fmt.Print("Masukkan nama komponen yang ingin dicari: ")
 		fmt.Scan(&searchQuery)
 		fmt.Println()
-		fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
-		fmt.Println("─────┼─────────────────────┼────────────────┼────────────────┼─────────────────┼────────────────┼──────────────")
+		fmt.Printf("%-5s¦ %-20s¦ %-15s¦ %-15s¦ %-15s¦ %-10s¦ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
+		fmt.Println("-----+---------------------+----------------+----------------+-----------------+----------------+--------------")
+		
+		found = false
 		for i = 0; i < nData; i++ {
 			if data[i].nama == searchQuery {
-				fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-16.2f│ %-15.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
+				fmt.Printf("%-5d¦ %-20s¦ %-15s¦ %-15s¦ %-16.2f¦ %-15.2f¦ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
+				found = true
 			}
 		}
+		
+		if !found {
+			fmt.Println("Data tidak ditemukan.")
+		}
+
 	} else if searchOption == 2 {
+		fmt.Print("Masukkan status komponen yang ingin dicari: ")
 		fmt.Scan(&searchQuery)
 		fmt.Println()
-		fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
-		fmt.Println("─────┼─────────────────────┼────────────────┼────────────────┼─────────────────┼────────────────┼──────────────")
-		for i = 0; i < nData; i++ {
-			if data[i].status == searchQuery {
-				fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-16.2f│ %-15.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
+		
+		tempData = *data
+		
+		i = 1
+		for i <= nData-1 {
+			j = i
+			tempSort = tempData[j]
+			for j > 0 && tempSort.status < tempData[j-1].status {
+				tempData[j] = tempData[j-1]
+				j = j - 1
+			}
+			tempData[j] = tempSort
+			i = i + 1
+		}
+
+		fmt.Printf("%-5s¦ %-20s¦ %-15s¦ %-15s¦ %-15s¦ %-10s¦ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
+		fmt.Println("-----+---------------------+----------------+----------------+-----------------+----------------+--------------")
+		
+		left = 0
+		right = nData - 1
+		found = false
+
+		for left <= right && !found {
+			mid = (left + right) / 2
+			
+			if tempData[mid].status == searchQuery {
+				batasKiri = mid
+				for batasKiri > 0 && tempData[batasKiri-1].status == searchQuery {
+					batasKiri = batasKiri - 1
+				}
+				
+				batasKanan = mid
+				for batasKanan < nData-1 && tempData[batasKanan+1].status == searchQuery {
+					batasKanan = batasKanan + 1
+				}
+				
+				for j = batasKiri; j <= batasKanan; j++ {
+					fmt.Printf("%-5d¦ %-20s¦ %-15s¦ %-15s¦ %-16.2f¦ %-15.2f¦ %-10s\n", j+1, tempData[j].nama, tempData[j].jenis, tempData[j].nomorSeri, tempData[j].suhuSensor, tempData[j].bebanKerja, tempData[j].status)
+				}
+				
+				found = true
+			} else if tempData[mid].status < searchQuery {
+				left = mid + 1
+			} else {
+				right = mid - 1
 			}
 		}
 
+		if !found {
+			fmt.Println("Data tidak ditemukan.")
+		}
 	} else {
 		fmt.Printf("Input tidak valid!\n")
-		fmt.Scanln()
 	}
 }
 
