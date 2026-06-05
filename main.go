@@ -217,7 +217,7 @@ func searchComponent(data *arrKomponen, nData int) {
 
 func sortComponent(data *arrKomponen, nData int) {
 	cls()
-	var sortOption, i, j, ascORdesc int
+	var sortOption, i, j, ascORdesc, pass int
 	var temp komponen
 	fmt.Println("Pilih atribut untuk mengurutkan komponen:")
 	fmt.Printf("[1] Nomor Seri\n")
@@ -226,7 +226,7 @@ func sortComponent(data *arrKomponen, nData int) {
 	fmt.Print("Masukkan pilihan atribut (1-3): ")
 	fmt.Scan(&sortOption)
 
-	if sortOption >= 1 && sortOption <= 6 {
+	if sortOption >= 1 && sortOption <= 3 {
 		fmt.Print("Masukkan pilihan urutan (1-Ascending, 2-Descending): ")
 		fmt.Scan(&ascORdesc)
 		if ascORdesc == 1 || ascORdesc == 2 {
@@ -246,16 +246,16 @@ func sortComponent(data *arrKomponen, nData int) {
 						i = i + 1
 					}
 				} else {
-					i = 1
-					for i <= nData-1 {
-						j = i
-						temp = data[j]
-						for j > 0 && temp.nomorSeri > data[j-1].nomorSeri {
-							data[j] = data[j-1]
-							j = j - 1
+					 for i = 0; i < nData-1; i++ {
+						pass = i
+						for j = i + 1; j < nData; j++ {
+							if data[j].nomorSeri > data[pass].nomorSeri {
+								pass = j
+							}
 						}
-						data[j] = temp
-						i = i + 1
+						temp = data[i]
+						data[i] = data[pass]
+						data[pass] = temp
 					}
 				}
 			case 2:
@@ -272,16 +272,16 @@ func sortComponent(data *arrKomponen, nData int) {
 						i = i + 1
 					}
 				} else {
-					i = 1
-					for i <= nData-1 {
-						j = i
-						temp = data[j]
-						for j > 0 && temp.suhuSensor > data[j-1].suhuSensor {
-							data[j] = data[j-1]
-							j = j - 1
+					 for i = 0; i < nData-1; i++ {
+						pass = i
+						for j = i + 1; j < nData; j++ {
+							if data[j].suhuSensor > data[pass].suhuSensor {
+								pass = j
+							}
 						}
-						data[j] = temp
-						i = i + 1
+						temp = data[i]
+						data[i] = data[pass]
+						data[pass] = temp
 					}
 				}
 			case 3:
@@ -298,16 +298,16 @@ func sortComponent(data *arrKomponen, nData int) {
 						i = i + 1
 					}
 				} else {
-					i = 1
-					for i <= nData-1 {
-						j = i
-						temp = data[j]
-						for j > 0 && temp.bebanKerja > data[j-1].bebanKerja {
-							data[j] = data[j-1]
-							j = j - 1
+					 for i = 0; i < nData-1; i++ {
+						pass = i
+						for j = i + 1; j < nData; j++ {
+							if data[j].bebanKerja > data[pass].bebanKerja {
+								pass = j
+							}
 						}
-						data[j] = temp
-						i = i + 1
+						temp = data[i]
+						data[i] = data[pass]
+						data[pass] = temp
 					}
 				}
 			}
