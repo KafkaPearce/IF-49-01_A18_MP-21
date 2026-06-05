@@ -29,7 +29,7 @@ func cls() {
 	cmd.Run()
 }
 
-// Fungsi header untuk menampilkan header pada aplikasi
+// header untuk menampilkan header pada aplikasi
 func header() {
 	var green, lightGreen, reset, bold string
 	green = "\033[92m"
@@ -41,19 +41,18 @@ func header() {
 	fmt.Printf("%s", green)
 	fmt.Println("╔════════════════════════════════════════════════════════════════════════════════╗")
 	fmt.Println("║                                                                                ║")
-	fmt.Println("║                    ✦ ★ ✦ ★ ✦  🏥 SehatinPC 🏥  ✦ ★ ✦ ★ ✦                       ║")
+	fmt.Println("║                       ✦ ★ ✦ ★ ✦  🖥️   SehatinPC 🖥️  ✦ ★ ✦ ★ ✦                    ║")
 	fmt.Println("║                                                                                ║")
-	fmt.Printf("║%s%-29s%s%-34s%s║\n", lightGreen, bold, "  Go Healthier, Go Faster", reset, green)
-	fmt.Println("║                                                                                ║")
+	fmt.Printf("║%s%-29s%s%-34s%s║\n", lightGreen, bold, "      Go Aware, Go Safety", reset, green)
+	fmt.Println("║                                        UHUY!                                   ║")
 	fmt.Println("╠════════════════════════════════════════════════════════════════════════════════╣")
-	fmt.Println("║                     ⚕️  Aplikasi Kesehatan Komputer Anda  ⚕️                     ║")
-	fmt.Println("║                🔧 Maintenance • 💻 Optimization • 🛡️  Security                  ║")
+	fmt.Println("║                     🤖  Aplikasi Kesehatan Komputer Anda  🤖                   ║")
 	fmt.Println("╚════════════════════════════════════════════════════════════════════════════════╝")
 	fmt.Printf("%s", reset)
 	fmt.Println()
 }
 
-// Fungsi menu untuk menampilkan menu utama dan menangani input pengguna
+// Fungsi menu
 func menu(selectOption *int, cnt *int) {
 	cls()
 	header()
@@ -70,7 +69,7 @@ func menu(selectOption *int, cnt *int) {
 	*cnt++
 }
 
-// Fungsi showTable untuk menampilkan data komponen dalam bentuk tabel
+// showTable untuk menampilkan data komponen dalam bentuk tabel
 func showTable(data *arrKomponen, nData int) {
 	fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
 	fmt.Println("─────┼─────────────────────┼────────────────┼────────────────┼─────────────────┼────────────────┼──────────────")
@@ -79,7 +78,22 @@ func showTable(data *arrKomponen, nData int) {
 	}
 }
 
-// Fungsi createComponent untuk menambah data komponen
+// statistik komponen
+func statKom(data *arrKomponen, nData int) {
+	var i, totalWarning int
+	var totalSuhu float64
+	for i = 0; i < nData; i++ {
+		if data[i].status == "Warning" {
+			totalWarning++
+		}
+		totalSuhu += data[i].suhuSensor
+	}
+	fmt.Println("Status: ")
+	fmt.Printf("Jumlah Komponen yang bersmasalah: %d\n", totalWarning)
+	fmt.Printf("Rata-rata suhu Komponen keseluruhan: %.2f\n", totalSuhu/float64(nData))
+}
+
+// createComponent untuk menambah data komponen
 func createComponent(data *arrKomponen, nData *int) {
 	cls()
 	var newKomponen komponen
@@ -93,13 +107,16 @@ func createComponent(data *arrKomponen, nData *int) {
 	fmt.Scan(&newKomponen.suhuSensor)
 	fmt.Print("Masukkan beban kerja: ")
 	fmt.Scan(&newKomponen.bebanKerja)
-	fmt.Print("Masukkan status: ")
-	fmt.Scan(&newKomponen.status)
+	if newKomponen.suhuSensor > 80.0 || newKomponen.bebanKerja > 90.0 {
+		newKomponen.status = "Warning"
+	} else {
+		newKomponen.status = "Normal"
+	}
 	data[*nData] = newKomponen
 	(*nData)++
 }
 
-// Fungsi updateComponent untuk mengubah data komponen
+// updateComponent untuk mengubah data komponen
 func updateComponent(data *arrKomponen, nData *int) {
 	cls()
 	var updateOption, selectOption int
@@ -113,7 +130,6 @@ func updateComponent(data *arrKomponen, nData *int) {
 		fmt.Printf("[3] Nomor Seri\n")
 		fmt.Printf("[4] Suhu Sensor (°C)\n")
 		fmt.Printf("[5] Beban Kerja (%%)\n")
-		fmt.Printf("[6] Status\n")
 		fmt.Printf("Masukkan pilihan atribut (1-6): ")
 		fmt.Scan(&selectOption)
 		switch selectOption {
@@ -132,18 +148,18 @@ func updateComponent(data *arrKomponen, nData *int) {
 		case 5:
 			fmt.Printf("Masukkan beban kerja baru: ")
 			fmt.Scan(&data[updateOption-1].bebanKerja)
-		case 6:
-			fmt.Printf("Masukkan status baru: ")
-			fmt.Scan(&data[updateOption-1].status)
 		default:
 			fmt.Println("Pilihan tidak valid.")
 		}
 	} else {
 		fmt.Println("Nomor komponen tidak valid.")
 	}
+	if data[updateOption-1].suhuSensor > 85.00 || data[updateOption-1].bebanKerja > 90.00 {
+		data[updateOption-1].status = "Warning"
+	}
 }
 
-// Fungsi deleteComponent untuk menghapus data komponen
+// deleteComponent untuk menghapus data komponen
 func deleteComponent(data *arrKomponen, nData *int) {
 	cls()
 	var deleteOption, i int
@@ -161,20 +177,41 @@ func deleteComponent(data *arrKomponen, nData *int) {
 	}
 }
 
-//Fungsi search untuk mencari data komponen
+// search untuk mencari data komponen
 func searchComponent(data *arrKomponen, nData int) {
 	cls()
-	var i int
+	var i, searchOption int
 	var searchQuery string
-	fmt.Print("Masukkan nama komponen yang ingin dicari: ")
-	fmt.Scan(&searchQuery)
-	fmt.Println()
-	fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
-	fmt.Println("─────┼─────────────────────┼────────────────┼────────────────┼─────────────────┼────────────────┼──────────────")
-	for i = 0; i < nData; i++ {
-		if data[i].nama == searchQuery {
-			fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-16.2f│ %-15.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
+
+	fmt.Printf("Opsi Pencarian:\n")
+	fmt.Printf("[1] Nama\n")
+	fmt.Printf("[2] Status\n")
+	fmt.Printf("Pilih Berdasarkan apa: ")
+	fmt.Scan(&searchOption)
+	if searchOption == 1 {
+		fmt.Print("Masukkan nama komponen yang ingin dicari: ")
+		fmt.Scan(&searchQuery)
+		fmt.Println()
+		fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
+		fmt.Println("─────┼─────────────────────┼────────────────┼────────────────┼─────────────────┼────────────────┼──────────────")
+		for i = 0; i < nData; i++ {
+			if data[i].nama == searchQuery {
+				fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-16.2f│ %-15.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
+			}
 		}
+	} else if searchOption == 2 {
+		fmt.Scan(&searchQuery)
+		fmt.Println()
+		fmt.Printf("%-5s│ %-20s│ %-15s│ %-15s│ %-15s│ %-10s│ %-10s\n", "No", "Nama Komponen", "Jenis Komponen", "Nomor Seri", "Suhu Sensor (°C)", "Beban Kerja (%)", "Status")
+		fmt.Println("─────┼─────────────────────┼────────────────┼────────────────┼─────────────────┼────────────────┼──────────────")
+		for i = 0; i < nData; i++ {
+			if data[i].status == searchQuery {
+				fmt.Printf("%-5d│ %-20s│ %-15s│ %-15s│ %-16.2f│ %-15.2f│ %-10s\n", i+1, data[i].nama, data[i].jenis, data[i].nomorSeri, data[i].suhuSensor, data[i].bebanKerja, data[i].status)
+			}
+		}
+	} else {
+		fmt.Printf("Input tidak valid!\n")
+		fmt.Scanln()
 	}
 }
 
@@ -183,13 +220,10 @@ func sortComponent(data *arrKomponen, nData int) {
 	var sortOption, i, j, ascORdesc int
 	var temp komponen
 	fmt.Println("Pilih atribut untuk mengurutkan komponen:")
-	fmt.Printf("[1] Nama Komponen\n")
-	fmt.Printf("[2] Jenis Komponen\n")
-	fmt.Printf("[3] Nomor Seri\n")
-	fmt.Printf("[4] Suhu Sensor (°C)\n")
-	fmt.Printf("[5] Beban Kerja (%%)\n")
-	fmt.Printf("[6] Status\n")
-	fmt.Print("Masukkan pilihan atribut (1-6): ")
+	fmt.Printf("[1] Nomor Seri\n")
+	fmt.Printf("[2] Suhu Sensor (°C)\n")
+	fmt.Printf("[3] Beban Kerja (%%)\n")
+	fmt.Print("Masukkan pilihan atribut (1-3): ")
 	fmt.Scan(&sortOption)
 
 	if sortOption >= 1 && sortOption <= 6 {
@@ -197,59 +231,8 @@ func sortComponent(data *arrKomponen, nData int) {
 		fmt.Scan(&ascORdesc)
 		if ascORdesc == 1 || ascORdesc == 2 {
 			switch sortOption {
+
 			case 1:
-				if ascORdesc == 1 {
-					i = 1
-					for i <= nData-1 {
-						j = i
-						temp = data[j]
-						for j > 0 && temp.nama < data[j-1].nama {
-							data[j] = data[j-1]
-							j = j - 1
-						}
-						data[j] = temp
-						i = i + 1
-					}
-				} else {
-					i = 1
-					for i <= nData-1 {
-						j = i
-						temp = data[j]
-						for j > 0 && temp.nama > data[j-1].nama {
-							data[j] = data[j-1]
-							j = j - 1
-						}
-						data[j] = temp
-						i = i + 1
-					}
-				}
-			case 2:
-				if ascORdesc == 1 {
-					i = 1
-					for i <= nData-1 {
-						j = i
-						temp = data[j]
-						for j > 0 && temp.jenis < data[j-1].jenis {
-							data[j] = data[j-1]
-							j = j - 1
-						}
-						data[j] = temp
-						i = i + 1
-					}
-				} else {
-					i = 1
-					for i <= nData-1 {
-						j = i
-						temp = data[j]
-						for j > 0 && temp.jenis > data[j-1].jenis {
-							data[j] = data[j-1]
-							j = j - 1
-						}
-						data[j] = temp
-						i = i + 1
-					}
-				}
-			case 3:
 				if ascORdesc == 1 {
 					i = 1
 					for i <= nData-1 {
@@ -275,7 +258,7 @@ func sortComponent(data *arrKomponen, nData int) {
 						i = i + 1
 					}
 				}
-			case 4:
+			case 2:
 				if ascORdesc == 1 {
 					i = 1
 					for i <= nData-1 {
@@ -301,7 +284,7 @@ func sortComponent(data *arrKomponen, nData int) {
 						i = i + 1
 					}
 				}
-			case 5:
+			case 3:
 				if ascORdesc == 1 {
 					i = 1
 					for i <= nData-1 {
@@ -327,32 +310,6 @@ func sortComponent(data *arrKomponen, nData int) {
 						i = i + 1
 					}
 				}
-			case 6:
-				if ascORdesc == 1 {
-					i = 1
-					for i <= nData-1 {
-						j = i
-						temp = data[j]
-						for j > 0 && temp.status < data[j-1].status {
-							data[j] = data[j-1]
-							j = j - 1
-						}
-						data[j] = temp
-						i = i + 1
-					}
-				} else {
-					i = 1
-					for i <= nData-1 {
-						j = i
-						temp = data[j]
-						for j > 0 && temp.status > data[j-1].status {
-							data[j] = data[j-1]
-							j = j - 1
-						}
-						data[j] = temp
-						i = i + 1
-					}
-				}
 			}
 		} else {
 			fmt.Println("Pilihan tidak valid.")
@@ -362,11 +319,12 @@ func sortComponent(data *arrKomponen, nData int) {
 	}
 }
 
-// Fungsi manageHome untuk menampilkan menu manajemen komponen
+// manageHome untuk menampilkan menu manajemen komponen
 func manageHome(data *arrKomponen, selectOption *int, cnt *int, nData int) {
 	cls()
 	header()
 	showTable(data, nData)
+	statKom(data, nData)
 	fmt.Printf("%-10s[1] ➤ Add Component\n", "")
 	fmt.Printf("%-10s[2] ➤ Update Component\n", "")
 	fmt.Printf("%-10s[3] ➤ Delete Component\n", "")
@@ -379,7 +337,7 @@ func manageHome(data *arrKomponen, selectOption *int, cnt *int, nData int) {
 	*cnt++
 }
 
-// Fungsi main
+// main
 func main() {
 	var data arrKomponen
 	var selectOption int = 1
