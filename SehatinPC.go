@@ -142,7 +142,7 @@ func updateComponent(data *arrKomponen, nData *int) {
 		fmt.Printf("[3] Nomor Seri\n")
 		fmt.Printf("[4] Suhu Sensor (°C)\n")
 		fmt.Printf("[5] Beban Kerja (%%)\n")
-		fmt.Printf("Masukkan pilihan atribut (1-6): ")
+		fmt.Printf("Masukkan pilihan atribut (1-5): ")
 		fmt.Scan(&selectOption)
 		switch selectOption {
 		case 1:
