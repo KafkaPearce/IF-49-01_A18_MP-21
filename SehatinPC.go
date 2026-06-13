@@ -46,7 +46,7 @@ func header() {
 	fmt.Printf("%s", green)
 	fmt.Println("╔════════════════════════════════════════════════════════════════════════════════╗")
 	fmt.Println("║                                                                                ║")
-	fmt.Println("║                       ✦ ★ ✦ ★ ✦  🖥️   SehatinPC 🖥️  ✦ ★ ✦ ★ ✦                    ║")
+	fmt.Println("║                     ✦ ★ ✦ ★ ✦  🖥️   SehatinPC 🖥️  ✦ ★ ✦ ★ ✦                    ║")
 	fmt.Println("║                                                                                ║")
 	fmt.Printf("║%s%-29s%s%-34s%s║\n", lightGreen, bold, "      Go Aware, Go Safety", reset, green)
 	fmt.Println("║                                        UHUY!                                   ║")
